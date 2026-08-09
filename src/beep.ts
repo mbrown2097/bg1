@@ -15,11 +15,12 @@ export default function beep(times = 3) {
     const start = now + i * 0.35;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = 880;
+    osc.type = 'square';
+    osc.frequency.value = 1200;
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(0.4, start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+    gain.gain.exponentialRampToValueAtTime(1, start + 0.02);
+    gain.gain.setValueAtTime(1, start + 0.22);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.3);
     osc.connect(gain).connect(ctx.destination);
     osc.start(start);
     osc.stop(start + 0.3);
