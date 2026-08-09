@@ -72,7 +72,6 @@ export default function AlertSettings() {
           onFocus={unlockBeep}
           onChange={e => setRefreshSec(Math.max(0, +e.target.value || 0))}
         />
-        sec
       </label>
       <label className="flex items-center gap-x-1.5">
         Alert
@@ -86,7 +85,6 @@ export default function AlertSettings() {
           onFocus={unlockBeep}
           onChange={e => setAlertMin(Math.max(0, +e.target.value || 0))}
         />
-        min
       </label>
     </div>
   );
