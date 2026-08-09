@@ -21,7 +21,7 @@ export default function useBackUpHighlight(experiences: Experience[]) {
       if (!standby) continue;
       if (!standby.available) {
         nowDown.add(exp.id);
-      } else if (prevDown.has(exp.id) && standby.waitTime !== undefined) {
+      } else if (prevDown.has(exp.id)) {
         justBackUp.push(exp.id);
       }
     }
