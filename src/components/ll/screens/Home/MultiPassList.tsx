@@ -16,6 +16,7 @@ import ResortContext from '@/contexts/ResortContext';
 import ThemeContext from '@/contexts/ThemeContext';
 import { DateTime, parkDate, upcomingTimes } from '@/datetime';
 import useBackUpHighlight from '@/hooks/useBackUpHighlight';
+import useDueSoonHighlight from '@/hooks/useDueSoonHighlight';
 import useSavedParty from '@/hooks/useSavedParty';
 import CheckmarkIcon from '@/icons/CheckmarkIcon';
 import DropIcon from '@/icons/DropIcon';
@@ -121,6 +122,7 @@ const Experiences = memo(function Experiences({
     return new Set(Array.isArray(ids) ? ids : []);
   });
   const backUpHighlighted = useBackUpHighlight(experiences);
+  const dueSoonHighlighted = useDueSoonHighlight(experiences);
   const today = parkDate();
   const isBookingToday = bookingDate === today;
   const dropTime = isBookingToday
@@ -175,7 +177,11 @@ const Experiences = memo(function Experiences({
               <StarButton experience={exp} toggleStar={toggleStar} />
               <h3
                 className={`flex-1 mt-0 text-lg font-semibold leading-tight truncate ${
-                  backUpHighlighted.has(exp.id) ? 'text-green-600' : ''
+                  backUpHighlighted.has(exp.id)
+                    ? 'text-green-600'
+                    : dueSoonHighlighted.has(exp.id)
+                      ? 'text-blue-600'
+                      : ''
                 }`}
               >
                 {exp.name}
