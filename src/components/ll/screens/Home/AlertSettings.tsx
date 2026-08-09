@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import beep, { unlockBeep } from '@/beep';
 import ExperiencesContext from '@/contexts/ExperiencesContext';
@@ -21,8 +21,6 @@ export default function AlertSettings() {
   const [alertMin, setAlertMin] = useState(
     () => kvdb.get<number>(ALERT_MIN_KEY) ?? 0
   );
-  const alertedRef = useRef<Set<string>>(new Set());
-
   useEffect(() => {
     kvdb.set(REFRESH_SEC_KEY, refreshSec);
   }, [refreshSec]);
@@ -46,21 +44,14 @@ export default function AlertSettings() {
       const starredIds = new Set(kvdb.get<string[]>(STARRED_KEY) ?? []);
       if (starredIds.size === 0) return;
       const now = +DateTime.now().time;
-      for (const exp of experiences) {
-        if (!starredIds.has(exp.id)) continue;
+      const dueSoon = experiences.some(exp => {
+        if (!starredIds.has(exp.id)) return false;
         const nextAvailableTime = exp.flex?.nextAvailableTime;
-        if (!nextAvailableTime) continue;
+        if (!nextAvailableTime) return false;
         const minutesUntil = (+nextAvailableTime - now) / 60;
-        const key = `${exp.id}@${+nextAvailableTime}`;
-        if (
-          minutesUntil >= 0 &&
-          minutesUntil <= alertMin &&
-          !alertedRef.current.has(key)
-        ) {
-          alertedRef.current.add(key);
-          beep();
-        }
-      }
+        return minutesUntil >= 0 && minutesUntil <= alertMin;
+      });
+      if (dueSoon) beep();
     };
     check();
     const id = setInterval(check, ALERT_CHECK_MS);
