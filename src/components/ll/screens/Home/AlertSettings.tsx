@@ -31,11 +31,19 @@ export default function AlertSettings() {
 
   useEffect(() => {
     if (!refreshSec) return;
-    const id = setInterval(() => {
-      refreshExperiences(0);
-      refreshPlans(0);
-    }, refreshSec * 1000);
-    return () => clearInterval(id);
+    let timer: ReturnType<typeof setTimeout>;
+    const scheduleNext = () => {
+      // Jitter uniformly between 0.5x and 1.5x refreshSec so the interval
+      // averages to what was entered without firing on a fixed cadence.
+      const delayMs = refreshSec * 1000 * (0.5 + Math.random());
+      timer = setTimeout(() => {
+        refreshExperiences(0);
+        refreshPlans(0);
+        scheduleNext();
+      }, delayMs);
+    };
+    scheduleNext();
+    return () => clearTimeout(timer);
   }, [refreshSec, refreshExperiences, refreshPlans]);
 
   useEffect(() => {
