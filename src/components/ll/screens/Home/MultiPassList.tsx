@@ -26,6 +26,7 @@ import kvdb from '@/kvdb';
 import RebookingHeader from '../../RebookingHeader';
 import { HomeTabProps } from '../Home';
 import RefreshButton from '../RefreshButton';
+import AlertSettings from './AlertSettings';
 import BookingDateSelect from './BookingDateSelect';
 import LLButton from './LLButton';
 import LLTime from './LLTime';
@@ -84,6 +85,7 @@ export default function MultiPassList({ ref }: HomeTabProps) {
       }
       subhead={
         <>
+          <AlertSettings />
           <RebookingHeader />
           {bookingDate === today && (
             <TimeBanner bookTime={ll.nextBookTime} dropTime={dropTime} />
