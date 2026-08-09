@@ -1,5 +1,7 @@
 # BG1: An Unofficial Lightning Lane and Boarding Group Client
 
+> ⚠️ **This fork is broken. Do not use. Do not fork this repository.**
+
 **WARNING! Use at your own risk. BG1 is highly experimental, for demonstration purposes only, and provided "as is" without warranty of any kind. It is in no way endorsed by or associated with the Walt Disney Company and could stop working at any time for any reason. To ensure the intended experience, always use the official Disney app.**
 
 BG1 is an unofficial, experimental client for obtaining Lightning Lane Multi Pass reservations and virtual queue boarding groups at Disney theme parks in the United States. Read the [BG1 documentation](https://joelface.github.io/bg1/) to learn more.
