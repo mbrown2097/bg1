@@ -12,7 +12,9 @@ const CHECK_MS = 5_000;
 // don't line up with bg1's own hardcoded per-ride dropTimes data, and
 // neither source is authoritative — layering both rather than trusting
 // either alone. Sorted ascending, required by upcomingTimes().
-const PARK_WIDE_DROP_TIMES = ['09:32', '12:00', '13:02'].map(ParkTime.from);
+export const PARK_WIDE_DROP_TIMES = ['09:32', '12:00', '13:02'].map(
+  ParkTime.from
+);
 
 export default function useDropSoonHighlight(experiences: Experience[]) {
   const [dropSoon, setDropSoon] = useState<Set<string>>(new Set());

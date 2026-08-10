@@ -16,7 +16,9 @@ import ResortContext from '@/contexts/ResortContext';
 import ThemeContext from '@/contexts/ThemeContext';
 import { DateTime, parkDate, upcomingTimes } from '@/datetime';
 import useBackUpHighlight from '@/hooks/useBackUpHighlight';
-import useDropSoonHighlight from '@/hooks/useDropSoonHighlight';
+import useDropSoonHighlight, {
+  PARK_WIDE_DROP_TIMES,
+} from '@/hooks/useDropSoonHighlight';
 import useDueSoonHighlight from '@/hooks/useDueSoonHighlight';
 import useSavedParty from '@/hooks/useSavedParty';
 import CheckmarkIcon from '@/icons/CheckmarkIcon';
@@ -66,6 +68,7 @@ export default function MultiPassList({ ref }: HomeTabProps) {
   useSavedParty();
   const { ll } = use(ClientsContext);
   const { park } = use(ParkContext);
+  const resort = use(ResortContext);
   const { experiences, refreshExperiences, loaderElem } =
     use(ExperiencesContext);
   const { bookingDate } = use(BookingDateContext);
@@ -81,7 +84,22 @@ export default function MultiPassList({ ref }: HomeTabProps) {
   }, []);
 
   const today = parkDate();
-  const dropTime = upcomingTimes(park.dropTimes)[0];
+  // "Next drop" banner: bg1's own per-ride dropTimes plus the park-wide
+  // windows, picking whichever is soonest. Flag it orange when that time
+  // isn't one bg1's own (non-added) ride data actually produces.
+  const originalDropTimes = new Set(
+    resort
+      .dropExperiences(park)
+      .filter(exp => !ADDED_DROP_RIDES.has(exp.name))
+      .flatMap(exp => (exp.dropTimes ?? []).map(t => +t))
+  );
+  const allDropTimes = [
+    ...new Map(
+      [...park.dropTimes, ...PARK_WIDE_DROP_TIMES].map(t => [+t, t])
+    ).values(),
+  ].sort((a, b) => +a - +b);
+  const dropTime = upcomingTimes(allDropTimes)[0];
+  const dropTimeIsNonBg1 = !!dropTime && !originalDropTimes.has(+dropTime);
 
   return (
     <Tab
@@ -99,7 +117,11 @@ export default function MultiPassList({ ref }: HomeTabProps) {
           <AlertSettings />
           <RebookingHeader />
           {bookingDate === today && (
-            <TimeBanner bookTime={ll.nextBookTime} dropTime={dropTime} />
+            <TimeBanner
+              bookTime={ll.nextBookTime}
+              dropTime={dropTime}
+              dropTimeIsNonBg1={dropTimeIsNonBg1}
+            />
           )}
         </>
       }
