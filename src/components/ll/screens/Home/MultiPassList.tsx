@@ -45,6 +45,14 @@ const LP_MAX_LL_WAIT = 60;
 export const STARRED_KEY = 'bg1.genie.tipBoard.starred';
 const LIGHTNING_PICK = 'Lightning Pick';
 const BOOKED = 'Booked';
+// dropTimes we added ourselves (cross-sourced, unverified) rather than the
+// ones already shipped with bg1 — flagged orange on the drop arrow so
+// they're visually distinct from the maintainer's original data.
+const ADDED_DROP_RIDES = new Set([
+  'Big Thunder Mountain Railroad',
+  'Space Mountain',
+  "Remy's Ratatouille Adventure",
+]);
 
 export interface ExtFlexExp extends FlexExperience {
   booked: boolean;
@@ -202,13 +210,20 @@ const Experiences = memo(function Experiences({
                     name="Next Drop"
                     icon={DropIcon}
                     onClick={() => showDropTimeDesc(exp)}
+                    themed={!ADDED_DROP_RIDES.has(exp.name)}
+                    className={
+                      ADDED_DROP_RIDES.has(exp.name) ? 'text-orange-600' : ''
+                    }
                   />
                 ) : (
                   <InfoButton
                     name="Future Drop"
                     icon={DropIcon}
                     onClick={() => showDropTimeDesc(exp)}
-                    className="opacity-50"
+                    themed={!ADDED_DROP_RIDES.has(exp.name)}
+                    className={`opacity-50 ${
+                      ADDED_DROP_RIDES.has(exp.name) ? 'text-orange-600' : ''
+                    }`}
                   />
                 )
               ) : null}
@@ -331,11 +346,13 @@ function InfoButton({
   icon: Icon,
   onClick,
   className,
+  themed = true,
 }: {
   name: string;
   icon: React.FunctionComponent<IconProps>;
   onClick: () => void;
   className?: string;
+  themed?: boolean;
 }) {
   return (
     <button
@@ -343,7 +360,7 @@ function InfoButton({
       className={`-mx-2 px-2 ${className ?? ''}`}
       onClick={onClick}
     >
-      <Icon themed />
+      <Icon themed={themed} />
     </button>
   );
 }
