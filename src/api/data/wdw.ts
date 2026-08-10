@@ -219,6 +219,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 2.3,
     highlight: true,
+    dropTimes: ['08:47', '13:47'],
   },
   80010114: {
     name: "Buzz Lightyear's Space Ranger Spin",
@@ -373,6 +374,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     avgWait: 35,
     highlight: true,
+    dropTimes: ['13:17', '15:47'],
   },
   80010196: {
     name: 'Swiss Family Treehouse',
@@ -670,6 +672,7 @@ export const experiences: ResortData['experiences'] = {
     priority: 1.1,
     avgWait: 56,
     highlight: true,
+    dropTimes: ['13:47'],
   },
   107785: {
     name: 'Seas with Nemo & Friends',
