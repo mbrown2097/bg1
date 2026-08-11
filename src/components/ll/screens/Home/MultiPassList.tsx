@@ -16,9 +16,7 @@ import ResortContext from '@/contexts/ResortContext';
 import ThemeContext from '@/contexts/ThemeContext';
 import { DateTime, parkDate, upcomingTimes } from '@/datetime';
 import useBackUpHighlight from '@/hooks/useBackUpHighlight';
-import useDropSoonHighlight, {
-  PARK_WIDE_DROP_TIMES,
-} from '@/hooks/useDropSoonHighlight';
+import useDropSoonHighlight from '@/hooks/useDropSoonHighlight';
 import useDueSoonHighlight from '@/hooks/useDueSoonHighlight';
 import useSavedParty from '@/hooks/useSavedParty';
 import CheckmarkIcon from '@/icons/CheckmarkIcon';
@@ -84,21 +82,17 @@ export default function MultiPassList({ ref }: HomeTabProps) {
   }, []);
 
   const today = parkDate();
-  // "Next drop" banner: bg1's own per-ride dropTimes plus the park-wide
-  // windows, picking whichever is soonest. Flag it orange when that time
-  // isn't one bg1's own (non-added) ride data actually produces.
+  // "Next drop" banner: flag it orange when the soonest time isn't
+  // produced by any of bg1's original (non-added) ride data. Park-wide
+  // "Big Three" windows were tested by the user and found false —
+  // removed 2026-08-10, don't re-add without new evidence.
   const originalDropTimes = new Set(
     resort
       .dropExperiences(park)
       .filter(exp => !ADDED_DROP_RIDES.has(exp.name))
       .flatMap(exp => (exp.dropTimes ?? []).map(t => +t))
   );
-  const allDropTimes = [
-    ...new Map(
-      [...park.dropTimes, ...PARK_WIDE_DROP_TIMES].map(t => [+t, t])
-    ).values(),
-  ].sort((a, b) => +a - +b);
-  const dropTime = upcomingTimes(allDropTimes)[0];
+  const dropTime = upcomingTimes(park.dropTimes)[0];
   const dropTimeIsNonBg1 = !!dropTime && !originalDropTimes.has(+dropTime);
 
   return (
