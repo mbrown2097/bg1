@@ -374,7 +374,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     avgWait: 35,
     highlight: true,
-    dropTimes: ['13:17', '15:47'],
+    dropTimes: ['13:47', '15:47'],
   },
   80010196: {
     name: 'Swiss Family Treehouse',
