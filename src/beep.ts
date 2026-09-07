@@ -9,6 +9,26 @@ export function unlockBeep() {
   }
 }
 
+// iOS Safari only counts certain event types (click/touch/key, not focus)
+// as the "user gesture" required to unlock Web Audio, so relying on an
+// <input onFocus> handler alone can silently fail to resume the context.
+// Listen for a real qualifying gesture anywhere in the app instead.
+const GESTURE_EVENTS = ['pointerdown', 'touchend', 'keydown'] as const;
+
+export function initBeepUnlock() {
+  const handler = () => {
+    unlockBeep();
+    if (ctx?.state === 'running') {
+      GESTURE_EVENTS.forEach(type =>
+        document.removeEventListener(type, handler)
+      );
+    }
+  };
+  GESTURE_EVENTS.forEach(type =>
+    document.addEventListener(type, handler, { passive: true })
+  );
+}
+
 export default function beep(times = 3) {
   if (!ctx) return;
   const now = ctx.currentTime;

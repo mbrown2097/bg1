@@ -1,6 +1,6 @@
 import { use, useEffect, useState } from 'react';
 
-import beep, { unlockBeep } from '@/beep';
+import beep from '@/beep';
 import ExperiencesContext from '@/contexts/ExperiencesContext';
 import PlansContext from '@/contexts/PlansContext';
 import { DateTime } from '@/datetime';
@@ -77,7 +77,6 @@ export default function AlertSettings() {
           className="w-14 rounded-sm px-1 py-0.5 text-black"
           value={refreshSec || ''}
           placeholder="off"
-          onFocus={unlockBeep}
           onChange={e => setRefreshSec(Math.max(0, +e.target.value || 0))}
         />
       </label>
@@ -90,7 +89,6 @@ export default function AlertSettings() {
           className="w-14 rounded-sm px-1 py-0.5 text-black"
           value={alertMin || ''}
           placeholder="off"
-          onFocus={unlockBeep}
           onChange={e => setAlertMin(Math.max(0, +e.target.value || 0))}
         />
       </label>

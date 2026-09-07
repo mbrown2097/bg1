@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { initBeepUnlock } from './beep';
 import App from './components/App';
 
 main();
@@ -14,6 +15,7 @@ function main() {
   document.close();
   addViewportMeta();
   addBlankFavicon();
+  initBeepUnlock();
   createAppRoot().render(
     <StrictMode>
       <App />
