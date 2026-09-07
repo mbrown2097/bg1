@@ -3,7 +3,8 @@ let ctx: AudioContext | null = null;
 export function unlockBeep() {
   if (!ctx) {
     ctx = new AudioContext();
-  } else if (ctx.state === 'suspended') {
+  }
+  if (ctx.state === 'suspended') {
     ctx.resume();
   }
 }
