@@ -31,6 +31,12 @@ export function initBeepUnlock() {
 
 export default function beep(times = 3) {
   if (!ctx) return;
+  // iOS auto-suspends an idle AudioContext to save power; a beep fired
+  // later from a timer (not a user gesture) needs to re-resume it every
+  // time, since it can suspend again between alerts. resume() itself
+  // doesn't require a fresh gesture once the context has been unlocked
+  // once via initBeepUnlock().
+  if (ctx.state === 'suspended') ctx.resume();
   const now = ctx.currentTime;
   for (let i = 0; i < times; i++) {
     const start = now + i * 0.35;
@@ -52,6 +58,7 @@ export default function beep(times = 3) {
 // audibly different from the single-pitch beep() above.
 export function dropBeep(times = 3) {
   if (!ctx) return;
+  if (ctx.state === 'suspended') ctx.resume();
   const now = ctx.currentTime;
   const freqs = [700, 450];
   let step = 0;
